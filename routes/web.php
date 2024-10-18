@@ -75,9 +75,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/user/post/{id}', [PostingController::class, 'update'])->name('update.postings');
     Route::delete('/user/post/{id}', [PostingController::class, 'destroy'])->name('delete.postings');
 
-
-
-
     Route::post('/postings/{postingId}/like', [PostingController::class, 'addLike'])->name('postings.like');
     Route::post('/postings/{postingId}/unlike', [PostingController::class, 'disLike'])->name('postings.unlike');
     Route::post('/postings/{postingId}/comment', [PostingController::class, 'addComment'])->name('postings.comment');
@@ -87,13 +84,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/postings/{postingId}/likes', [PostingController::class, 'showLikes'])->name('postings.likes');
 
 
+    Route::get('/categories', [CategoriesController::class, 'index']);
+    Route::post('/categories/submit', [CategoriesController::class, 'store'])->name('submit.categories');
+    Route::put('/categories/edit/{category_id}', [CategoriesController::class, 'update'])->name('update.categories');
+    Route::delete('/categories/{category_id}', [CategoriesController::class, 'destroy'])->name('delete.categories');
+
+    Route::get('/books', [BooksController::class, 'index']);
+    Route::post('/books/submit', [BooksController::class, 'store'])->name('submit.books');
+    Route::put('/books/edit/{book_id}', [BooksController::class, 'update'])->name('update.books');
+    Route::delete('/books/{book_id}', [BooksController::class, 'destroy'])->name('delete.books');
 
 });
 
-Route::get('/categories', [CategoriesController::class, 'index']);
-Route::post('/categories/submit', [CategoriesController::class, 'store'])->name('submit.categories');
-Route::delete('/categories/{category_id}', [CategoriesController::class, 'destroy'])->name('delete.categories');
-
-Route::get('/books', [BooksController::class, 'index']);
-Route::post('/books/submit', [BooksController::class, 'store'])->name('submit.books');
-Route::delete('/books/{book_id}', [BooksController::class, 'destroy'])->name('delete.books');

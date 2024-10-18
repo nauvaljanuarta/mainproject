@@ -17,7 +17,7 @@
             </div>
             <div class="form-group">
                 <label for="bookCode">Book Code</label>
-                <input type="text" class="form-control" id="bookCode" placeholder="Code" name="book_kode" required>
+                <input type="text" class="form-control" id="bookCode" placeholder="Code" name="book_code" required>
             </div>
             <div class="form-group">
                 <label for="categorySelect">Category</label>
@@ -47,6 +47,8 @@
                         <th>Book Title</th>
                         <th>Author</th>
                         <th>Category</th>
+                        <th>Create by</th>
+                        <th>Updated by</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -54,15 +56,23 @@
                     @foreach ($books as $index => $book)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $book->book_kode }}</td>
+                        <td>{{ $book->book_code }}</td>
                         <td>{{ $book->book_judul }}</td>
                         <td>{{ $book->book_pengarang }}</td>
+                        <td>{{ $book->create_by }}</td>
+                        <td>{{ $book->update_by }}</td>
                         <td>{{ $book->category ? $book->category->category_name : 'N/A' }}</td>
                         <td>
+                            <button class="btn btn-warning btn-sm" onclick="showEditForm(
+                            {{ $book->id }},
+                            '{{ $book->book_judul }}',
+                            '{{ $book->book_pengarang }}',
+                            '{{ $book->book_code }}',
+                            {{ $book->category_id }})">Edit</button>
                             <form action="{{ route('delete.books', $book->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger mr-1" onclick="return confirm('Are you sure you want to delete this book?');">Delete</button>
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this book?');">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -73,10 +83,65 @@
     </div>
 </div>
 
+<br>
+
+<div class="card" id="editBookCard" style="display:none;">
+    <div class="card-body">
+        <h4 class="card-title">Edit Book</h4>
+        <form method="POST" action="{{ route('update.books', $book->id) }}" class="forms-sample">
+            @csrf
+            @method('PUT')
+            <input type="hidden" id="editBookId" name="book_id">
+            <div class="form-group">
+                <label for="editBookTitle">Book Title</label>
+                <input type="text" class="form-control" id="editBookTitle" name="book_judul" required>
+            </div>
+            <div class="form-group">
+                <label for="editBookAuthor">Author</label>
+                <input type="text" class="form-control" id="editBookAuthor" name="book_pengarang" required>
+            </div>
+            <div class="form-group">
+                <label for="editBookCode">Book Code</label>
+                <input type="text" class="form-control" id="editBookCode" name="book_code" required>
+            </div>
+            <div class="form-group">
+                <label for="editCategorySelect">Category</label>
+                <select class="form-control" id="editCategorySelect" name="category_id" required>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary mr-2">Update</button>
+            <button type="button" class="btn btn-secondary" onclick="hideEditForm()">Cancel</button>
+        </form>
+    </div>
+</div>
+
 @if ($message = Session::get('success'))
     <div class="alert alert-success">
         <p>{{ $message }}</p>
     </div>
 @endif
+
+<script>
+
+function showEditForm(id, title, author, code, categoryId) {
+    // Populate the form with the book details
+    document.getElementById('editBookId').value = id;
+    document.getElementById('editBookTitle').value = title;
+    document.getElementById('editBookAuthor').value = author;
+    document.getElementById('editBookCode').value = code;
+    document.getElementById('editCategorySelect').value = categoryId;
+
+    // Show the form
+    $('#editBookCard').slideDown('slow');
+    }
+
+function hideEditForm() {
+    $('#editBookCard').slideUp('slow');
+    
+}
+</script>
 
 @endsection

@@ -13,7 +13,7 @@ class Books extends Model
     protected $table = 'books';
 
     // The attributes that are mass assignable.
-    protected $fillable = ['book_kode', 'book_judul', 'book_pengarang', 'category_id'];
+    protected $fillable = ['book_code', 'book_judul', 'book_pengarang','create_by', 'update_by', 'category_id'];
 
     /**
      * Get the category that owns the book.
