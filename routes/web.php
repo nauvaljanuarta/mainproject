@@ -94,5 +94,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/books/edit/{book_id}', [BooksController::class, 'update'])->name('update.books');
     Route::delete('/books/{book_id}', [BooksController::class, 'destroy'])->name('delete.books');
 
+    Route::get('/user/api',[PostingController::class,'api']);
+
 });
 

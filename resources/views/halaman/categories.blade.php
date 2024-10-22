@@ -32,7 +32,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($categories as $index => $category)
+                            @forelse ($categories as $index => $category)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $category->category_name }}</td>
@@ -46,7 +46,11 @@
                                     </form>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="6" class="text-center">No categories found.</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -58,7 +62,7 @@
         <div class="card" id="editCategoryCard" style="display:none;">
             <div class="card-body">
                 <h4 class="card-title">Edit Category</h4>
-                <form method="POST" action="{{ route('update.categories', $category->id) }}" class="forms-sample">
+                <form method="POST" action="{{ isset($category) ? route('update.categories', $category->id) : '#' }}" class="forms-sample">
                     @csrf
                     @method('PUT')
                     <input type="hidden" id="editCategoryId" name="category_id">
@@ -88,7 +92,7 @@
 
     // Hide Edit Form
     function hideEditForm() {
-        $('#editCategoryCard').slideUp('slow');     
+        $('#editCategoryCard').slideUp('slow');
     }
 </script>
 

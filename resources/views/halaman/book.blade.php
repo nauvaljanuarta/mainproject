@@ -53,7 +53,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($books as $index => $book)
+                    @forelse ($books as $index => $book)
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $book->book_code }}</td>
@@ -76,7 +76,11 @@
                             </form>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                            <tr>
+                                <td colspan="8" class="text-center">No Books found.</td>
+                            </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -88,7 +92,7 @@
 <div class="card" id="editBookCard" style="display:none;">
     <div class="card-body">
         <h4 class="card-title">Edit Book</h4>
-        <form method="POST" action="{{ route('update.books', $book->id) }}" class="forms-sample">
+        <form method="POST" action="{{ isset($book) ? route('update.books', $book->id) : '#' }}" class="forms-sample">
             @csrf
             @method('PUT')
             <input type="hidden" id="editBookId" name="book_id">
@@ -140,7 +144,7 @@ function showEditForm(id, title, author, code, categoryId) {
 
 function hideEditForm() {
     $('#editBookCard').slideUp('slow');
-    
+
 }
 </script>
 

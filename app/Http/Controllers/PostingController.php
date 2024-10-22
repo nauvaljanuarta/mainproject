@@ -23,6 +23,15 @@ class PostingController extends Controller
         $postings = Posting::with(['comments', 'likes', 'users'])->latest()->get();
         return view('user.dashboard', ['users'=>$users,  'menus'=> $menus, 'selectedMenus'=>$selectedMenus, 'postings'=> $postings]);
     }
+    public function api()
+    {
+        $users = User::all();
+        $menus = Menu::where('parent_id', null)->notDeleted()->get();
+        $currentUserRole = Auth::user()->id_jenis_user;
+        $selectedMenus = JenisUsers::findOrFail($currentUserRole)->menus->pluck('id')->toArray();
+        $postings = Posting::with(['comments', 'likes', 'users'])->latest()->get();
+        return view('user.api', ['users'=>$users,  'menus'=> $menus, 'selectedMenus'=>$selectedMenus, 'postings'=> $postings]);
+    }
     public function mypost()
     {
         $users = User::all();
@@ -66,11 +75,6 @@ class PostingController extends Controller
 
         $posting->save();
         return redirect()->route('add.postings')->with('success', 'Posting created successfully.');
-    }
-
-    public function show()
-    {
-
     }
 
     public function edit($id)

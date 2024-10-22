@@ -43,8 +43,7 @@ class CategoriesController extends Controller
         $category = Categories::findOrFail($id);
         $category->category_name = $request->input('category_name');
         $category->save();
-
-        // Redirect back with a success message
+        
         return redirect()->back()->with('success', 'Category updated successfully.');
     }
 
