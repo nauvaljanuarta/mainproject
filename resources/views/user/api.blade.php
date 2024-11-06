@@ -9,7 +9,7 @@
 
         <br>
 
-        <!-- Card container -->
+
         <div id="gempa-card" class="card mb-4 shadow rounded" style="display: none;">
             <div class="card-header">
                 <h4 class="card-title">Detail Gempa</h4>
@@ -35,13 +35,10 @@
 
     <script>
         $(document).ready(function() {
-            // Event listener untuk button
             $('#load-gempa').click(function() {
-                // Memanggil API BMKG
+
                 $.getJSON('https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json', function(data) {
                     var gempa = data.Infogempa.gempa;
-
-                    // Menampilkan data gempa di elemen HTML
                     $('#tanggal').text(gempa.Tanggal);
                     $('#jam').text(gempa.Jam);
                     $('#koordinat').text(gempa.Coordinates);
@@ -52,8 +49,6 @@
                     $('#wilayah').text(gempa.Wilayah);
                     $('#potensi').text(gempa.Potensi);
                     $('#dirasakan').text(gempa.Dirasakan);
-
-                    // Memastikan penggunaan satu titik untuk mengakses shakemap
                     $('#shakemap').html(
                         "<img src='https://data.bmkg.go.id/DataMKG/TEWS/" + gempa.Shakemap + "' alt='Shakemap' style='max-width: 100%; height: auto;' />"
                     );

@@ -10,6 +10,7 @@ use App\Http\Controllers\JenisUsersController;
 use App\Http\Controllers\PenerbitController;
 use App\Http\Controllers\PostingController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
 // Halaman umum
 Route::get('/coba', function () {
@@ -26,10 +27,12 @@ Route::get('/c', function () {
 
 // Rute untuk login dan register
 Route::get('/', [UserController::class, 'loginview']);
+Route::get('/login', [UserController::class, 'loginview']);
 Route::get('/register', [UserController::class, 'registerview']);
 Route::post('/register', [UserController::class, 'register'])->name('register');
-Route::post('/login', [UserController::class, 'login'])->name('login');
+Route::post('/login/gas', [UserController::class, 'login'])->name('login');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
 
 
 Route::group(['middleware' => 'auth'], function () {
@@ -58,6 +61,64 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/menu-assignments/toggle', [SettingMenuUserController::class, 'toggleMenu'])->name('menu-assignments.toggle');
 
         Route::get('/user/dashboard', [PostingController::class, 'index']);
+
+        // saham
+        Route::get('/transaksi/summary', function () {
+            $totalEmiten = DB::table('emiten')->count();
+            $totalVolume = DB::table('transaksi_harian')->sum('volume');
+            $totalValue = DB::table('transaksi_harian')->sum('value');
+            $totalFrequency = DB::table('transaksi_harian')->sum('frequency');
+
+            return response()->json([
+                'totalEmiten' => $totalEmiten,
+                'totalVolume' => $totalVolume,
+                'totalValue' => $totalValue,
+                'totalFrequency' => $totalFrequency
+            ]);
+        });
+        Route::get('/top5-frequencies', function () {
+
+            $topFrequencies = DB::table('transaksi_harian')
+                ->select('stock_code', DB::raw('SUM(frequency) as total_frequency'))
+                ->groupBy('stock_code')
+                ->orderBy('total_frequency', 'desc')
+                ->limit(5)
+                ->get();
+
+            return response()->json($topFrequencies);
+        });
+        Route::get('/transaksi/values', function () {
+
+            $values = DB::table('transaksi_harian')
+                ->select('stock_code', DB::raw('SUM(value) as value'))
+                ->groupBy('stock_code')
+                ->get();
+
+            return response()->json($values);
+        });
+        Route::get('/transaksi-harian/data', function () {
+            $data = DB::table('transaksi_harian')
+                ->select('stock_code', 'date_transaction', 'volume', 'value', 'frequency')
+                ->orderBy('date_transaction', 'desc')
+                ->get();
+
+            return response()->json($data);
+        });
+
+        //download pdf
+        Route::get('/admin/report', [AdminController::class, 'laporan']);
+
+        Route::get('/emiten/data-summary', function () {
+            $emitenData = DB::table('transaksi_harian')
+                ->select('stock_code',
+                DB::raw('SUM(volume) as total_volume'),
+                DB::raw('SUM(value) as total_value'),
+                DB::raw('SUM(frequency) as total_frequency'))
+                ->groupBy('stock_code')
+                ->get();
+            return response()->json($emitenData);
+        });
+
     });
 
     // Rute untuk Penerbit

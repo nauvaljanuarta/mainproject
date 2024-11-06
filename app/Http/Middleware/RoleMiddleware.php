@@ -9,14 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     * @param  string  $role
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
+   
     public function handle(Request $request, Closure $next, string $role)
     {
         $user = Auth::user();

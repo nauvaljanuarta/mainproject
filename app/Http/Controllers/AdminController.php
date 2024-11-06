@@ -21,6 +21,18 @@ class AdminController extends Controller
         return view('admin.dashboard', ['users'=>$users, 'jenisusers' => $jenisusers, 'menus'=> $menus, 'selectedMenus'=> $selectedMenus]);
 
     }
+
+    public function laporan()
+    {
+        $users = User::all();
+        $jenisusers = JenisUsers::with('menus.subMenus')->get();
+        $menus = Menu::with('subMenus')->whereNull('parent_id')->notDeleted()->get();
+        $currentUserRole = Auth::user()->id_jenis_user;
+        $selectedMenus = JenisUsers::findOrFail($currentUserRole)->menus->pluck('id')->toArray();
+        return view('admin.laporan', ['users'=>$users, 'jenisusers' => $jenisusers, 'menus'=> $menus, 'selectedMenus'=> $selectedMenus]);
+
+    }
+
     public function listpage()
     {
         $users = User::all();

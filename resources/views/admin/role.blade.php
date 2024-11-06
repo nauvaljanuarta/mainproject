@@ -17,7 +17,7 @@
 <div class="card shadow-sm">
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover table-striped w-100">
+            <table id="roleTable" class="table table-hover table-striped w-100">
                 <thead class="table-light">
                     <tr>
                         <th>ID</th>
@@ -88,8 +88,25 @@
     </div>
 </div>
 
+
 <script>
-    $(document).ready(function() {
+     $(document).ready(function() {
+
+        $('#roleTable').DataTable({
+            paging: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            lengthChange: true,
+            language: {
+                search: "Search:",
+                lengthMenu: "Display _MENU_ records per page",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries", 
+                infoEmpty: "No records available",
+                zeroRecords: "No matching records found"
+            }
+        });
+
         $('#toggleFormButton').click(function() {
             $('#addRoleFormContainer').slideToggle('slow');
         });

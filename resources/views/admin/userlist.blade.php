@@ -11,12 +11,11 @@
     </div>
 </div>
 
-
 <div id="userTableContainer" class="card shadow-sm">
     <div class="card-body">
         <h4 class="card-title mb-4">User List</h4>
         <div class="table-responsive">
-            <table class="table table-hover table-striped w-100">
+            <table id="userTable" class="table table-hover table-striped w-100">
                 <thead class="table-light">
                     <tr>
                         <th>ID</th>
@@ -48,7 +47,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center">No users found.</td>
+                            <td colspan="7" class="text-center">No users found.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -60,7 +59,6 @@
     </div>
 </div>
 <br>
-
 
 <div id="addUserFormContainer" class="card shadow-sm mt-4" style="display: none;">
     <div class="card-body">
@@ -111,13 +109,21 @@
 
 <script>
     $(document).ready(function() {
+        // Initialize DataTable
+        $('#userTable').DataTable({
+            // Optional configurations
+            paging: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            lengthChange: true
+        });
+
         $('#toggleFormButton').click(function() {
             var $formContainer = $('#addUserFormContainer');
             $formContainer.slideToggle('slow');
-
         });
     });
 </script>
 
 @endsection
-

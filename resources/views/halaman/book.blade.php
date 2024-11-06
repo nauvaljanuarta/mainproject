@@ -39,7 +39,7 @@
     <div class="card-body">
         <h4 class="card-title">Books Table</h4>
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table id="bookTable" class="table table-hover">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -59,27 +59,29 @@
                         <td>{{ $book->book_code }}</td>
                         <td>{{ $book->book_judul }}</td>
                         <td>{{ $book->book_pengarang }}</td>
+                        <td>{{ $book->category ? $book->category->category_name : 'N/A' }}</td>
                         <td>{{ $book->create_by }}</td>
                         <td>{{ $book->update_by }}</td>
-                        <td>{{ $book->category ? $book->category->category_name : 'N/A' }}</td>
                         <td>
-                            <button class="btn btn-warning btn-sm" onclick="showEditForm(
-                            {{ $book->id }},
-                            '{{ $book->book_judul }}',
-                            '{{ $book->book_pengarang }}',
-                            '{{ $book->book_code }}',
-                            {{ $book->category_id }})">Edit</button>
-                            <form action="{{ route('delete.books', $book->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this book?');">Delete</button>
-                            </form>
+                            <div class="d-flex justify-content-start">
+                                <a class="btn btn-warning btn-sm me-2" onclick="showEditForm(
+                                    {{ $book->id }},
+                                    '{{ $book->book_judul }}',
+                                    '{{ $book->book_pengarang }}',
+                                    '{{ $book->book_code }}',
+                                    {{ $book->category_id }})">Edit</a>
+                                <form action="{{ route('delete.books', $book->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this book?');">Delete</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @empty
-                            <tr>
-                                <td colspan="8" class="text-center">No Books found.</td>
-                            </tr>
+                        <tr>
+                            <td colspan="8" class="text-center">No Books found.</td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>
@@ -129,22 +131,36 @@
 @endif
 
 <script>
+$(document).ready(function() {
+    $('#bookTable').DataTable({
+        paging: true,
+        searching: true,
+        ordering: true,
+        info: true,
+        lengthChange: true,
+        language: {
+            search: "Search:",
+            lengthMenu: "Display _MENU_ records per page",
+            info: "Showing _START_ to _END_ of _TOTAL_ entries",
+            infoEmpty: "No records available",
+            zeroRecords: "No matching records found"
+        }
+    });
+});
 
 function showEditForm(id, title, author, code, categoryId) {
-    // Populate the form with the book details
+
     document.getElementById('editBookId').value = id;
     document.getElementById('editBookTitle').value = title;
     document.getElementById('editBookAuthor').value = author;
     document.getElementById('editBookCode').value = code;
     document.getElementById('editCategorySelect').value = categoryId;
 
-    // Show the form
     $('#editBookCard').slideDown('slow');
-    }
+}
 
 function hideEditForm() {
     $('#editBookCard').slideUp('slow');
-
 }
 </script>
 
